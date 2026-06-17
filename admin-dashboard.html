@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPTIS | Admin Control Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Theme tweak for Admin Portal (purple/violet accents) */
+    :root {
+      --primary: #8b5cf6;
+      --primary-hover: #7c3aed;
+      --primary-glow: rgba(139, 92, 246, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon" style="background: linear-gradient(135deg, var(--accent), var(--secondary));">A</div>
+      <span class="logo-text">CPTIS<span>.</span>Admin</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn">Find Ideas</a>
+      <span class="nav-btn active" style="cursor: default;">Admin Panel</span>
+      <button class="btn btn-outline" id="logoutBtn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="container">
+    
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+      <div class="dashboard-title">
+        <h2>Administrator Console</h2>
+        <p>System configuration, professor accounts, and proposal moderation</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-primary" id="addProfessorBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+          Add Professor
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="color: var(--accent); background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.2);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Professors</span>
+          <span class="stat-val" id="statProfessors">0</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Proposals</span>
+          <span class="stat-val" id="statProposals">0</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon" style="color: var(--secondary); background: rgba(6, 182, 212, 0.1); border-color: rgba(6, 182, 212, 0.2);">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        </div>
+        <div class="stat-info">
+          <span class="stat-label">Inquiries</span>
+          <span class="stat-val" id="statInquiries">0</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs Control -->
+    <div class="dashboard-tabs">
+      <button class="tab-btn active" id="profTabBtn" data-section="profSection">Professors</button>
+      <button class="tab-btn" id="projectsTabBtn" data-section="projectsSection">Proposals</button>
+      <button class="tab-btn" id="inquiriesTabBtn" data-section="inquiriesSection">Inquiries</button>
+    </div>
+
+    <!-- Professors Management Section -->
+    <section class="dashboard-section active" id="profSection">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Professor Details</th>
+              <th>Department</th>
+              <th>Email Address</th>
+              <th>Proposals Posted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="professorsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Proposals Management Section -->
+    <section class="dashboard-section" id="projectsSection">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Proposal Details</th>
+              <th>Advisor</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="projectsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Inquiries Management Section -->
+    <section class="dashboard-section" id="inquiriesSection">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Student Inquiry</th>
+              <th>Proposal Details</th>
+              <th>Advisor Assigned</th>
+              <th>Inquiry Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inquiriesTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Professor Create/Edit Modal -->
+  <div class="modal-overlay" id="profModal">
+    <div class="modal-content" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 id="profModalTitle">Add Professor Account</h3>
+        <button class="modal-close" id="closeProfModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="profForm" class="auth-form">
+          <div class="form-group">
+            <label for="profName">Full Name *</label>
+            <input type="text" id="profName" placeholder="e.g. Dr. Jane Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="profDept">Department *</label>
+            <select id="profDept" required>
+              <option value="" disabled selected>Select Department</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Electrical Engineering">Electrical Engineering</option>
+              <option value="Bioengineering">Bioengineering</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="profEmail">Email Address *</label>
+            <input type="email" id="profEmail" placeholder="jane.doe@university.edu" required>
+          </div>
+          <div class="form-group">
+            <label for="profPassword">Password *</label>
+            <input type="password" id="profPassword" placeholder="Minimum 6 characters" required>
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px;">
+            <button type="button" class="btn btn-secondary" id="cancelProfBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveProfBtn">Save Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Edit Modal (Admin variant) -->
+  <div class="modal-overlay" id="adminProjectModal">
+    <div class="modal-content" style="max-width: 680px;">
+      <div class="modal-header">
+        <h3>Edit Proposal (Administrator)</h3>
+        <button class="modal-close" id="closeProjModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="adminProjectForm" class="auth-form" style="gap: 15px;">
+          
+          <div class="form-group">
+            <label for="projTitle">Proposal Title *</label>
+            <input type="text" id="projTitle" required>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="projType">Proposal Type *</label>
+              <select id="projType" required>
+                <option value="thesis">Thesis Idea</option>
+                <option value="research">Research Project</option>
+                <option value="project">Capstone / Course Project</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="projAdvisor">Assigned Advisor *</label>
+              <select id="projAdvisor" required>
+                <!-- Filled dynamically -->
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="projDuration">Estimated Duration *</label>
+              <input type="text" id="projDuration" required>
+            </div>
+            <div class="form-group">
+              <label for="projStatus">Project Status *</label>
+              <select id="projStatus" required>
+                <option value="open">Open (Accepting Applicants)</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="projSkills">Required Skills & Keywords (Comma separated) *</label>
+            <input type="text" id="projSkills" required>
+          </div>
+
+          <div class="form-group">
+            <label for="projPrereqs">Prerequisites & Coursework</label>
+            <textarea id="projPrereqs" style="min-height: 80px;"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="projDesc">Detailed Description *</label>
+            <textarea id="projDesc" style="min-height: 120px;" required></textarea>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px;">
+            <button type="button" class="btn btn-secondary" id="cancelProjBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Proposal Changes</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script type="module" src="js/admin-dashboard.js"></script>
+</body>
+</html>

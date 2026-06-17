@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPTIS | Professor Authentication</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">C</div>
+      <span class="logo-text">CPTIS<span>.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn">Find Ideas</a>
+      <a href="login.html" class="btn btn-primary active" id="loginBtn">Professor Portal</a>
+    </div>
+  </nav>
+
+  <!-- Main Wrapper -->
+  <main class="container">
+    <div class="auth-wrapper">
+      
+      <!-- Login Card -->
+      <div class="auth-card" id="loginCard">
+        <div class="auth-header">
+          <h2 id="authTitle">Professor Login</h2>
+          <p id="authSubtitle">Manage your thesis ideas and student inquiries</p>
+        </div>
+
+        <div class="error-message" id="authError">Incorrect password. Please try again.</div>
+
+        <!-- Login Form -->
+        <form class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="e.g. prof.smith@university.edu" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Log In</button>
+        </form>
+
+        <!-- Register Form (hidden by default) -->
+        <form class="auth-form" id="registerForm" style="display: none;">
+          <div class="form-group">
+            <label for="regName">Full Name</label>
+            <input type="text" id="regName" placeholder="e.g. Dr. Jane Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="regDept">Department</label>
+            <select id="regDept" required>
+              <option value="" disabled selected>Select Department</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Electrical Engineering">Electrical Engineering</option>
+              <option value="Bioengineering">Bioengineering</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Academic Email</label>
+            <input type="email" id="regEmail" placeholder="e.g. jane.doe@university.edu" required>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password (6+ characters)</label>
+            <input type="password" id="regPassword" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Create Account</button>
+        </form>
+
+        <div class="auth-toggle" id="authToggleContainer">
+          Don't have an account? <a href="#" id="toggleAuthBtn">Sign up</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer style="text-align: center; margin-top: 60px; padding: 20px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem;">
+    <p>&copy; 2026 CPTIS. All rights reserved. | <a href="admin-login.html" style="color: var(--secondary); text-decoration: none;">Administrator Portal</a></p>
+  </footer>
+
+  <!-- Scripts -->
+
+  <script type="module">
+    import { auth } from './js/auth.js';
+    import { showToast } from './js/toast.js';
+
+
+    // State: 'login' or 'register'
+    let mode = 'login';
+
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const toggleAuthBtn = document.getElementById('toggleAuthBtn');
+    const authTitle = document.getElementById('authTitle');
+    const authSubtitle = document.getElementById('authSubtitle');
+    const authError = document.getElementById('authError');
+    const authToggleContainer = document.getElementById('authToggleContainer');
+
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.redirectIfLoggedIn();
+    });
+
+    // Toggle between login and registration forms
+    toggleAuthBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      authError.style.display = 'none';
+
+      if (mode === 'login') {
+        mode = 'register';
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'flex';
+        authTitle.textContent = 'Professor Registration';
+        authSubtitle.textContent = 'Register to post projects and find students';
+        authToggleContainer.innerHTML = 'Already have an account? <a href="#" id="toggleAuthBtn">Log in</a>';
+      } else {
+        mode = 'login';
+        loginForm.style.display = 'flex';
+        registerForm.style.display = 'none';
+        authTitle.textContent = 'Professor Login';
+        authSubtitle.textContent = 'Manage your thesis ideas and student inquiries';
+        authToggleContainer.innerHTML = `Don't have an account? <a href="#" id="toggleAuthBtn">Sign up</a>`;
+      }
+
+      // Rebind event listener because we replaced toggleAuthBtn's innerHTML
+      document.getElementById('toggleAuthBtn').addEventListener('click', (evt) => {
+        evt.preventDefault();
+        toggleAuthBtn.click();
+      });
+    });
+
+    // Handle Login Form Submit
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      authError.style.display = 'none';
+
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPassword').value;
+
+      try {
+        const user = auth.login(email, pass);
+        showToast('Welcome back, ' + user.name, 'success');
+        setTimeout(() => {
+          if (user.role === 'admin') {
+            window.location.href = 'admin-dashboard.html';
+          } else {
+            window.location.href = 'dashboard.html';
+          }
+        }, 1200);
+
+      } catch (err) {
+        authError.textContent = err.message;
+        authError.style.display = 'block';
+      }
+    });
+
+    // Handle Register Form Submit
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      authError.style.display = 'none';
+
+      const name = document.getElementById('regName').value;
+      const dept = document.getElementById('regDept').value;
+      const email = document.getElementById('regEmail').value;
+      const pass = document.getElementById('regPassword').value;
+
+      try {
+        const user = auth.register(name, email, pass, dept);
+        showToast('Registration successful! Welcome, ' + user.name, 'success');
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1200);
+      } catch (err) {
+        authError.textContent = err.message;
+        authError.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

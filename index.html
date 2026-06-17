@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPTIS | Project & Thesis Information System</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Favicon placeholder or styling -->
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">C</div>
+      <span class="logo-text">CPTIS<span>.</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn active">Find Ideas</a>
+      <a href="login.html" class="btn btn-secondary" id="loginBtn">Professor Portal</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero">
+    <h1>Discover Research & Thesis Projects</h1>
+    <p>Explore cutting-edge opportunities, connect with leading professors, and find your next academic milestone. Start searching below.</p>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+
+    <!-- Search & Filter Panel -->
+    <section class="search-filter-panel">
+      <div class="search-bar-container">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="searchInput" placeholder="Search by project titles, keywords, skills, or professor names...">
+        </div>
+      </div>
+      
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label for="deptFilter">Department</label>
+          <select id="deptFilter">
+            <option value="all">All Departments</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+            <option value="Bioengineering">Bioengineering</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="typeFilter">Idea Type</label>
+          <select id="typeFilter">
+            <option value="all">All Types</option>
+            <option value="thesis">Thesis Ideas</option>
+            <option value="research">Research Projects</option>
+            <option value="project">Course / Capstone Projects</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="statusFilter">Status</label>
+          <select id="statusFilter">
+            <option value="all">All Statuses</option>
+            <option value="open">Open Applications</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="sortBy">Sort By</label>
+          <select id="sortBy">
+            <option value="newest">Newest First</option>
+            <option value="views">Most Popular (Views)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Catalog Grid -->
+    <section class="projects-grid" id="projectsGrid">
+      <!-- Project cards will be rendered dynamically here -->
+    </section>
+
+  </main>
+
+  <!-- Project Details Modal -->
+  <div class="modal-overlay" id="detailsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="badge" id="modalBadge">Thesis</span>
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h2 id="modalTitle">Project Title</h2>
+        
+        <div class="modal-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Department</span>
+            <span class="meta-value" id="modalDept">Computer Science</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Professor</span>
+            <span class="meta-value" id="modalProfName">Dr. Sarah Smith</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Duration</span>
+            <span class="meta-value" id="modalDuration">2 Semesters</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Contact</span>
+            <span class="meta-value" id="modalProfEmail">prof@cptis.edu</span>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">Project Overview</h3>
+          <p id="modalDesc" style="color: var(--text-secondary);">Full description will go here.</p>
+        </div>
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">Prerequisites</h3>
+          <p id="modalPrereqs" style="color: var(--text-secondary);">Prerequisites will go here.</p>
+        </div>
+
+        <div class="modal-section">
+          <h3 class="modal-section-title">Skills & Technologies</h3>
+          <div class="project-tags" id="modalSkills">
+            <!-- Skills tags will be rendered dynamically here -->
+          </div>
+        </div>
+
+        <!-- Express Interest Form (Only shown if project status is 'open') -->
+        <div class="inquiry-form-box" id="inquiryBox">
+          <h3>Express Interest in this Project</h3>
+          <form id="inquiryForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="studentName">Your Name *</label>
+                <input type="text" id="studentName" placeholder="e.g. Alex Johnson" required>
+              </div>
+              <div class="form-group">
+                <label for="studentEmail">Academic Email *</label>
+                <input type="email" id="studentEmail" placeholder="e.g. alex.j@university.edu" required>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+              <label for="studentMessage">Message *</label>
+              <textarea id="studentMessage" placeholder="Briefly describe your interest, background, and how you meet the prerequisites..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Inquiry</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer style="text-align: center; margin-top: 60px; padding: 20px; border-top: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.85rem;">
+    <p>&copy; 2026 CPTIS. All rights reserved. | <a href="admin-login.html" style="color: var(--secondary); text-decoration: none;">Administrator Portal</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

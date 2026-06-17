@@ -1,0 +1,12 @@
+{
+  "name": "cptis",
+  "version": "1.0.0",
+  "description": "Cooperative Project & Thesis Information System",
+  "main": "index.html",
+  "scripts": {
+    "dev": "lite-server"
+  },
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}

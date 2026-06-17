@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPTIS | Admin Portal Login</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="index.html" class="logo">
+      <div class="logo-icon" style="background: linear-gradient(135deg, var(--accent), var(--secondary));">A</div>
+      <span class="logo-text">CPTIS<span>.</span>Admin</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-btn">Find Ideas</a>
+      <a href="login.html" class="btn btn-secondary">Professor Portal</a>
+    </div>
+  </nav>
+
+  <!-- Main Wrapper -->
+  <main class="container">
+    <div class="auth-wrapper">
+      
+      <!-- Login Card -->
+      <div class="auth-card">
+        <div class="auth-header">
+          <h2>Admin Login Portal</h2>
+          <p>Access administration controls and overview reports</p>
+        </div>
+
+        <div class="error-message" id="authError">Incorrect password. Please try again.</div>
+
+        <!-- Login Form -->
+        <form class="auth-form" id="adminLoginForm">
+          <div class="form-group">
+            <label for="adminEmail">Administrator Email</label>
+            <input type="email" id="adminEmail" placeholder="admin@cptis.edu" required>
+          </div>
+          <div class="form-group">
+            <label for="adminPassword">Admin Password</label>
+            <input type="password" id="adminPassword" placeholder="••••••••" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, var(--accent), var(--secondary)); border: none; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.25); margin-top: 10px;">
+            Secure Log In
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import { auth } from './js/auth.js';
+    import { showToast } from './js/toast.js';
+
+    const loginForm = document.getElementById('adminLoginForm');
+    const authError = document.getElementById('authError');
+
+    // Check if user is already logged in
+    document.addEventListener('DOMContentLoaded', () => {
+      auth.redirectIfLoggedIn();
+    });
+
+    // Handle Login Form Submit
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      authError.style.display = 'none';
+
+      const email = document.getElementById('adminEmail').value;
+      const pass = document.getElementById('adminPassword').value;
+
+      try {
+        const user = auth.login(email, pass);
+        
+        if (user.role !== 'admin') {
+          throw new Error('This account does not have administrator permissions.');
+        }
+
+        showToast('System Admin access granted. Loading...', 'success');
+        setTimeout(() => {
+          window.location.href = 'admin-dashboard.html';
+        }, 1200);
+      } catch (err) {
+        authError.textContent = err.message;
+        authError.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
